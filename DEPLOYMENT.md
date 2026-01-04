@@ -48,11 +48,15 @@ Vercel will auto-detect Next.js. Verify these settings:
 | `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL | From Supabase Dashboard → Settings → API |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon key | From Supabase Dashboard → Settings → API |
 | `NEXT_PUBLIC_SITE_URL` | Your Vercel URL | Will be `https://your-project.vercel.app` (set after first deploy) |
+| `DATABASE_URL` | Supabase connection pooling URL | Optional - add when ready to use Prisma |
+| `DIRECT_URL` | Supabase direct connection URL | Optional - add when ready to use Prisma |
 
 **Important Notes:**
 - Make sure to add these to **Production**, **Preview**, and **Development** environments
 - `NEXT_PUBLIC_SITE_URL` can be updated after first deployment with your actual Vercel URL
-- Never commit `.env.local` to Git (it's in `.gitignore`)
+- **You DON'T need .env.local for Vercel** - Vercel uses its own environment variables
+- `.env.local` is ONLY for local development (it's in `.gitignore` and never deployed)
+- Prisma reads from `process.env.DATABASE_URL` which Vercel provides automatically
 
 ### 5. Deploy
 
