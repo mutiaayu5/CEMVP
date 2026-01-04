@@ -54,7 +54,14 @@ export default function VerifyMFAPage() {
         body: JSON.stringify({ pin: values.pin }),
       })
 
-      const data = await response.json()
+      let data;
+      try {
+        data = await response.json()
+      } catch (jsonError) {
+        setError('Invalid response from server')
+        setLoading(false)
+        return
+      }
 
       if (!response.ok) {
         setError(data.error || 'Invalid PIN')
@@ -80,7 +87,14 @@ export default function VerifyMFAPage() {
         method: 'POST',
       })
 
-      const data = await response.json()
+      let data;
+      try {
+        data = await response.json()
+      } catch (jsonError) {
+        setError('Invalid response from server')
+        setSendingPin(false)
+        return
+      }
 
       if (!response.ok) {
         setError(data.error || 'Failed to send PIN')

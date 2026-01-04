@@ -67,21 +67,35 @@ export default function SignInPage() {
       }
 
       // Check if MFA is required
-      const mfaCheck = await fetch('/api/auth/check-mfa')
-      if (mfaCheck.ok) {
-        const mfaData = await mfaCheck.json()
-        
-        if (mfaData.requiresMfa) {
-          // Redirect to MFA verification page
-          router.push("/auth/verify-mfa")
-          return
+      try {
+        const mfaCheck = await fetch('/api/auth/check-mfa')
+        if (mfaCheck.ok) {
+          let mfaData;
+          try {
+            mfaData = await mfaCheck.json()
+          } catch (jsonError) {
+            // If JSON parsing fails, continue to dashboard
+            console.warn('Failed to parse MFA check response')
+            router.push("/dashboard")
+            router.refresh()
+            return
+          }
+          
+          if (mfaData.requiresMfa) {
+            // Redirect to MFA verification page
+            router.push("/auth/verify-mfa")
+            return
+          }
+          
+          if (mfaData.needsPasswordSetup) {
+            // Redirect to password setup
+            router.push("/auth/setup-password")
+            return
+          }
         }
-        
-        if (mfaData.needsPasswordSetup) {
-          // Redirect to password setup
-          router.push("/auth/setup-password")
-          return
-        }
+      } catch (mfaError) {
+        // If MFA check fails, continue to dashboard
+        console.warn('MFA check failed:', mfaError)
       }
 
       router.push("/dashboard")
