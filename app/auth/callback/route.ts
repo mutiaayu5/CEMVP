@@ -33,17 +33,10 @@ export async function GET(request: Request) {
       role = detectUserRole(user.email || '')
       
       // Check if profile exists
-      let existingProfile;
-      try {
-        existingProfile = await prisma.profile.findUnique({
-          where: { userId: user.id },
-          include: { oauthAccounts: true }
-        })
-      } catch (dbError) {
-        console.error('Error checking existing profile:', dbError)
-        // Continue to create new profile if query fails
-        existingProfile = null
-      }
+      const existingProfile = await prisma.profile.findUnique({
+        where: { userId: user.id },
+        include: { oauthAccounts: true }
+      })
 
       if (existingProfile) {
         // Update existing profile
