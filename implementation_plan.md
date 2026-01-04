@@ -1,4 +1,4 @@
-# AI Automation Marketplace (Templates) - Architecture & Implementation Plan
+.# AI Automation Marketplace (Templates) - Architecture & Implementation Plan
 
 This document outlines the architecture for a scalable **AI Automation Template Marketplace**. The goal is to serve 1 million users who want to browse, search, and download/copy high-quality AI automation workflows (e.g., n8n, Zapier, LangChain configs).
 
