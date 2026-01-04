@@ -144,7 +144,7 @@ export async function GET(request: Request) {
 
           // For first-time admin login, enable MFA and send setup email
           const { generateMFAPin, getPinExpiration } = await import('@/lib/auth/mfa')
-          const { resend, FROM_EMAIL } = await import('@/lib/email/resend')
+          const { resend, FROM_EMAIL, isEmailConfigured } = await import('@/lib/email/resend')
           const { getFirstTimeAdminEmail } = await import('@/lib/email/templates')
           
           const mfaPin = generateMFAPin()
@@ -162,19 +162,24 @@ export async function GET(request: Request) {
             }
           })
 
-          // Send first-time admin email
-          try {
-            const emailContent = getFirstTimeAdminEmail(mfaPin, setupUrl, user.email || '')
-            await resend.emails.send({
-              from: FROM_EMAIL,
-              to: user.email!,
-              subject: emailContent.subject,
-              html: emailContent.html,
-              text: emailContent.text,
-            })
-          } catch (emailError) {
-            console.error('Error sending admin setup email:', emailError)
-            // Don't fail the callback if email fails
+          // Send first-time admin email (only if email is configured)
+          if (isEmailConfigured() && resend) {
+            try {
+              const emailContent = getFirstTimeAdminEmail(mfaPin, setupUrl, user.email || '')
+              await resend.emails.send({
+                from: FROM_EMAIL,
+                to: user.email!,
+                subject: emailContent.subject,
+                html: emailContent.html,
+                text: emailContent.text,
+              })
+            } catch (emailError) {
+              console.error('Error sending admin setup email:', emailError)
+              // Don't fail the callback if email fails
+            }
+          } else {
+            console.warn('Email service not configured. MFA PIN generated but not sent:', mfaPin)
+            // In production, you might want to log this to a monitoring service
           }
         }
       }

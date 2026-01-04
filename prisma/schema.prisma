@@ -11,6 +11,9 @@ datasource db {
   directUrl = env("DIRECT_URL") // Optional - only needed for migrations
 }
 
+// Note: DATABASE_URL is required at runtime for Prisma to work
+// But build can succeed without it (Prisma Client generation will use a dummy URL)
+
 // Profile table - Links to Supabase auth.users
 // userId field connects to Supabase auth.users.id
 model Profile {

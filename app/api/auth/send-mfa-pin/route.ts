@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 import { generateMFAPin, getPinExpiration } from '@/lib/auth/mfa'
-import { resend, FROM_EMAIL } from '@/lib/email/resend'
+import { resend, FROM_EMAIL, isEmailConfigured } from '@/lib/email/resend'
 import { getMfaPinEmail } from '@/lib/email/templates'
 
 export async function POST() {
@@ -58,6 +58,13 @@ export async function POST() {
     })
 
     // Send email with PIN
+    if (!isEmailConfigured() || !resend) {
+      return NextResponse.json(
+        { error: 'Email service not configured' },
+        { status: 500 }
+      )
+    }
+
     const emailContent = getMfaPinEmail(mfaPin, profile.email)
     
     await resend.emails.send({

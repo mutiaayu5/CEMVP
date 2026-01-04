@@ -21,11 +21,16 @@ Your build script automatically:
 
 Go to Vercel Dashboard → Your Project → Settings → Environment Variables
 
-**Required:**
+**Required for Build:**
+- `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+
+**Required for Runtime (add after first deployment):**
 - `DATABASE_URL` - Your Supabase connection pooling URL
   ```
   postgresql://postgres.[ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres?pgbouncer=true
   ```
+  Get this from: Supabase Dashboard > Settings > Database > Connection Pooling
 
 **Optional (for migrations):**
 - `DIRECT_URL` - Your Supabase direct connection URL (port 5432)
@@ -35,20 +40,39 @@ Go to Vercel Dashboard → Your Project → Settings → Environment Variables
 
 **Note:** If `DIRECT_URL` is not set, Prisma will use `DATABASE_URL` for migrations.
 
-### 2. Deploy
+### 2. Deploy (First Time)
 
 ```bash
 git add .
-git commit -m "Initial deployment with OAuth and MFA"
+git commit -m "Initial deployment"
 git push
 ```
 
 Vercel will automatically:
 - ✅ Install dependencies
-- ✅ Generate Prisma Client
-- ✅ Push schema to database (creates all tables)
+- ✅ Generate Prisma Client (uses dummy DATABASE_URL for build)
 - ✅ Build Next.js app
 - ✅ Deploy
+
+**Note:** The build will succeed, but the app won't work until you add `DATABASE_URL`.
+
+### 3. Add DATABASE_URL After First Deployment
+
+1. **Get DATABASE_URL** from Supabase:
+   - Go to Supabase Dashboard > Settings > Database
+   - Copy the **Connection Pooling** URL (port 6543)
+
+2. **Add to Vercel**:
+   - Vercel Dashboard > Your Project > Settings > Environment Variables
+   - Add `DATABASE_URL` with the connection string
+   - Save
+
+3. **Redeploy** (or it will work on next request):
+   - Go to Deployments tab
+   - Click "Redeploy" on latest deployment
+   - Or just wait - it will work on the next API request
+
+Now your app will work! The database tables will be created automatically on first use.
 
 ## What Gets Created
 

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma db push --skip-generate && next build",
+    "build": "tsx scripts/setup-prisma-env.ts && prisma generate && next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "prisma:generate": "prisma generate",
