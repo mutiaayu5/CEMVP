@@ -38,3 +38,5 @@ next-env.d.ts
 # prisma
 prisma/migrations/
 
+# generated reports (from specs)
+/docs/prisma-sync-report.md

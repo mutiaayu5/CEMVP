@@ -17,22 +17,140 @@ model Profile {
   id        String   @id @default(uuid())
   userId    String   @unique // Links to Supabase auth.users.id
   email     String   @unique
+  username  String?  @unique // Username from OAuth or custom
   fullName  String?
+  firstName String?  // From OAuth providers
+  lastName  String?  // From OAuth providers
   avatarUrl String?
-  role      UserRole @default(CONSUMER)
+  phone     String?  // Phone number if available from OAuth
+  role      UserRole @default(USER)
+  
+  // MFA Settings (PIN-based)
+  mfaEnabled    Boolean  @default(false)
+  mfaPin        String?  // PIN code (encrypted, 6 digits)
+  mfaPinExpires DateTime? // PIN expiration time
+  mfaVerified   Boolean  @default(false)
+  passwordSet   Boolean  @default(false) // Whether password has been set
+  
+  // OAuth Information
+  oauthAccounts OAuthAccount[]
+  
+  // Role-specific relations
+  sellerInfo SellerInfo?
+  adminInfo  AdminInfo?
+  
+  // General relations
+  templates Template[]
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
-  templates Template[]
-
+  @@index([email])
+  @@index([username])
+  @@index([role])
   @@map("profiles")
 }
 
+// OAuth Account Information
+// Stores data from social media platforms
+model OAuthAccount {
+  id            String   @id @default(uuid())
+  profileId     String
+  profile       Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  // Provider Information
+  provider      OAuthProvider // google, github, azure, apple
+  providerId    String   // Unique ID from provider
+  providerEmail String?  // Email from provider (may differ from profile email)
+  providerUsername String? // Username from provider
+  
+  // OAuth Metadata
+  accessToken   String?  @db.Text // Encrypted access token
+  refreshToken  String?  @db.Text // Encrypted refresh token
+  expiresAt     DateTime? // Token expiration
+  
+  // Provider-specific data (JSON)
+  providerData  Json?    // Store all additional data from provider (name, picture, etc.)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([provider, providerId])
+  @@index([profileId])
+  @@index([provider])
+  @@map("oauth_accounts")
+}
+
+// Seller Information
+// Additional data for users with SELLER role
+model SellerInfo {
+  id        String   @id @default(uuid())
+  profileId String   @unique
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  // Business Information
+  businessName    String?
+  businessEmail   String?
+  businessPhone   String?
+  businessWebsite String?
+  taxId           String?  // Tax ID for payments
+  
+  // Stripe Connect
+  stripeAccountId     String?  @unique // Stripe Connect account ID
+  stripeAccountStatus String?  // active, pending, restricted
+  
+  // Seller Stats
+  totalEarnings  Decimal  @default(0) @db.Decimal(10, 2)
+  totalSales     Int      @default(0)
+  rating         Decimal? @db.Decimal(3, 2) // Average rating (0-5)
+  reviewCount    Int      @default(0)
+  
+  // Verification
+  verified       Boolean  @default(false)
+  verifiedAt     DateTime?
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("seller_info")
+}
+
+// Admin Information
+// Additional data for users with ADMIN role
+model AdminInfo {
+  id        String   @id @default(uuid())
+  profileId String   @unique
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  // Admin Permissions
+  permissions String[] // Array of permission strings (e.g., ["manage_users", "approve_templates"])
+  
+  // Admin Stats
+  templatesApproved Int @default(0)
+  templatesRejected Int @default(0)
+  usersManaged      Int @default(0)
+  
+  // Activity
+  lastActivityAt DateTime?
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("admin_info")
+}
+
 enum UserRole {
-  CONSUMER
-  CREATOR
-  ADMIN
+  USER   // Regular user/consumer
+  SELLER // Can sell templates
+  ADMIN  // Can manage platform
+}
+
+enum OAuthProvider {
+  GOOGLE
+  GITHUB
+  AZURE
+  APPLE
+  EMAIL // For email/password auth
 }
 
 // Template model - Core marketplace asset
@@ -121,4 +239,3 @@ enum InteractionType {
   DOWNLOAD
   LIKE
 }
-

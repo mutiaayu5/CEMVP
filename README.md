@@ -1,135 +1,145 @@
 # CEMVP - AI Automation Marketplace
 
-Test website for CEMVP with Supabase authentication, shadcn/ui components, and Vercel deployment.
+A sleek, high-performance marketplace for downloading and buying automation templates (e.g., n8n workflows, Zapier zaps).
 
-## 🚀 Quick Start
+## Quick Start
 
-### Prerequisites
-
-- Node.js 18+ installed
-- A Supabase project set up
-- Vercel account (for deployment)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd CEMVP
-   ```
-
-2. **Install dependencies**
+1. **Install dependencies**:
    ```bash
    npm install
    ```
 
-3. **Set up environment variables**
-   
-   Copy `env.example` to `.env.local`:
+2. **Set up environment variables**:
    ```bash
    cp env.example .env.local
-   ```
-   
-   Then update `.env.local` with your Supabase credentials:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   # Fill in your Supabase and Resend credentials
    ```
 
-4. **Run the development server**
+3. **Set up Prisma** (migrations run automatically on Vercel):
+   ```bash
+   npm run prisma:generate
+   ```
+
+4. **Run development server**:
    ```bash
    npm run dev
    ```
 
-5. **Open your browser**
-   
-   Navigate to [http://localhost:3000](http://localhost:3000)
+## Admin Access
 
-## 📦 Technology Stack
+**Admin Email**: `developer@createconomy.com`
 
-All versions are tracked in `versions.json`. Key technologies:
+On first login, the admin will:
+- Receive an email with MFA PIN (6 digits)
+- Receive password setup link
+- Need to enter PIN for every login
 
-- **Next.js 15** - React framework with App Router
-- **TypeScript 5.6** - Type safety
-- **Supabase** - Authentication and database
-- **shadcn/ui** - UI component library
-- **Tailwind CSS** - Styling
+## Spec-Driven Development
 
-## 🧪 Testing Checklist
+This project uses **spec-driven development** where Markdown specifications serve as the single source of truth.
 
-This test website verifies:
+### Quick Workflow
 
-- ✅ Vercel deployment
-- ✅ Supabase connectivity
-- ✅ Supabase authentication (sign up, sign in, sign out)
-- ✅ Protected routes
-- ✅ shadcn/ui components
+1. **Write specs** in `docs/api-specs/`, `docs/data-specs/`, `docs/ui-specs/`
+2. **Generate code**: `npm run spec:generate`
+3. **Validate**: `npm run spec:validate`
+4. **Check sync**: `npm run spec:sync`
 
-## 📁 Project Structure
+See [Spec-Driven Development Guide](./docs/SPEC_DRIVEN_DEVELOPMENT.md) for details.
+
+## Technology Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript 5.6
+- **UI**: shadcn/ui + Tailwind CSS
+- **Database**: Supabase (PostgreSQL)
+- **ORM**: Prisma
+- **Auth**: Supabase Auth (with OAuth: Google, GitHub, Microsoft, Apple)
+- **Email**: Resend (transactional emails)
+- **Payments**: Stripe Connect (planned)
+
+## Project Structure
 
 ```
-CEMVP/
-├── app/                    # Next.js App Router pages
-│   ├── auth/              # Authentication pages
-│   ├── dashboard/         # Protected dashboard
-│   └── page.tsx           # Home page
-├── components/            # React components
-│   └── ui/               # shadcn/ui components
-├── lib/                  # Utilities
-│   ├── supabase/        # Supabase clients
-│   └── utils.ts         # Helper functions
-├── middleware.ts         # Auth middleware
-└── versions.json         # Version tracking
+├── app/                 # Next.js app directory
+│   ├── api/            # API routes
+│   ├── auth/           # Authentication pages
+│   └── dashboard/      # Dashboard pages
+├── components/         # React components
+│   └── ui/            # shadcn/ui components
+├── docs/               # Documentation & specs
+│   ├── api-specs/     # API specifications
+│   ├── data-specs/    # Data model specifications
+│   └── ui-specs/      # UI specifications
+├── lib/                # Utility libraries
+│   ├── auth/          # Authentication utilities (role detection, MFA)
+│   ├── email/         # Email utilities (Resend)
+│   ├── schemas/       # Zod schemas (generated)
+│   ├── types/         # TypeScript types (generated)
+│   ├── prisma.ts      # Prisma client
+│   └── supabase/      # Supabase clients
+├── prisma/             # Prisma schema
+│   └── schema.prisma  # Database schema
+└── scripts/            # Build & generation scripts
 ```
 
-## 🔐 Authentication Flow
+## Available Scripts
 
-1. **Sign Up**: Create a new account at `/auth/signup`
-2. **Sign In**: Sign in at `/auth/signin`
-3. **Dashboard**: Access protected dashboard at `/dashboard`
-4. **Sign Out**: Sign out from dashboard or home page
-
-## 🚢 Deployment to Vercel
-
-📖 **For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)**
-
-### Quick Deployment Steps
-
-1. **Push to GitHub**
-   ```bash
-   git add .
-   git commit -m "Initial setup"
-   git push origin main
-   ```
-
-2. **Connect to Vercel**
-   - Go to [Vercel Dashboard](https://vercel.com)
-   - Import your GitHub repository
-   - Add environment variables (see [DEPLOYMENT.md](./DEPLOYMENT.md) for details)
-
-3. **Deploy**
-   - Vercel will automatically deploy on push to main branch
-
-## 📝 Environment Variables
-
-Required environment variables:
-
-- `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anon/public key
-- `NEXT_PUBLIC_SITE_URL` - Your site URL (for redirects)
-
-Optional:
-
-- `SUPABASE_SERVICE_ROLE_KEY` - For server-side operations (keep secret!)
-
-## 🔧 Development
-
+### Development
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
 
-## 📄 License
+### Prisma
+- `npm run prisma:generate` - Generate Prisma Client
+- `npm run prisma:push` - Push schema to database
+- `npm run prisma:studio` - Open Prisma Studio
+- `npm run prisma:migrate` - Run migrations
+
+### Spec-Driven Development
+- `npm run spec:generate` - Generate code from specs
+- `npm run spec:validate` - Validate code matches specs
+- `npm run spec:sync` - Check for spec-code drift
+
+## Environment Variables
+
+See `env.example` for required environment variables:
+
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
+- `DATABASE_URL` - PostgreSQL connection string
+- `DIRECT_URL` - Direct PostgreSQL connection (optional, for migrations)
+- `RESEND_API_KEY` - Resend API key for emails
+- `RESEND_FROM_EMAIL` - Email address to send from
+- `NEXT_PUBLIC_SITE_URL` - Site URL for email links
+
+## Deployment
+
+### Vercel
+
+1. Connect your GitHub repository to Vercel
+2. Add environment variables in Vercel dashboard
+3. Deploy automatically on push to main
+
+**Migrations run automatically** during build (since you're starting fresh).
+
+The project is configured for Vercel deployment with:
+- Next.js framework detection
+- Automatic Prisma Client generation
+- Automatic database schema push
+- Edge runtime support
+
+## Documentation
+
+- [Requirements](./docs/requirements.md) - Functional requirements
+- [Implementation Plan](./docs/implementation_plan.md) - Technical roadmap
+- [Spec-Driven Development](./docs/SPEC_DRIVEN_DEVELOPMENT.md) - Spec-driven workflow guide
+- [Project State](./docs/project_state.md) - Current project status
+- [Authentication Schema](./docs/AUTHENTICATION_SCHEMA.md) - User roles, MFA, OAuth
+- [Admin Setup](./docs/ADMIN_SETUP.md) - Admin account setup guide
+- [Vercel Deployment](./docs/VERCEL_DEPLOYMENT.md) - Deployment instructions
+
+## License
 
 Private project

@@ -4,13 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "prisma generate && prisma db push --skip-generate && next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
-    "prisma:migrate": "prisma migrate dev"
+    "prisma:migrate": "prisma migrate dev",
+    "spec:generate": "tsx scripts/generate-all.ts",
+    "spec:validate": "tsx scripts/validate-specs.ts",
+    "spec:sync": "tsx scripts/sync-check.ts"
   },
   "devDependencies": {
     "typescript": "^5.6.0",
@@ -23,7 +26,8 @@
     "autoprefixer": "^10.4.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.0.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.19.0"
   },
   "dependencies": {
     "next": "^15.0.0",
@@ -40,7 +44,8 @@
     "@hookform/resolvers": "^3.9.0",
     "zod": "^3.23.0",
     "@radix-ui/react-label": "^2.1.0",
-    "@radix-ui/react-slot": "^1.1.0"
+    "@radix-ui/react-slot": "^1.1.0",
+    "resend": "^3.2.0"
   }
 }
 
