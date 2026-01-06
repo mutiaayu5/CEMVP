@@ -1,0 +1,30 @@
+# Source files (if publishing)
+src/
+app/
+components/
+lib/
+
+# Development files
+.env*
+*.log
+.vscode/
+.idea/
+.DS_Store
+
+# Tests
+tests/
+*.test.*
+*.spec.*
+
+# Documentation
+docs/
+specs/
+*.md
+!README.md
+
+# Config files
+tsconfig.json
+next.config.*
+.eslintrc*
+.prettierrc*
+

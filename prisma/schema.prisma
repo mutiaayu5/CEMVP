@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model WaitlistEmail {
+  id         String   @id @default(uuid())
+  email      String   @unique @db.VarChar(255)
+  ip_address String?  @db.VarChar(45)
+  created_at DateTime @default(now()) @map("created_at")
+
+  @@index([email])
+  @@index([created_at])
+  @@index([ip_address, created_at])
+  @@map("waitlist_emails")
+}
+
+model BlogPost {
+  id           String    @id @default(uuid())
+  title        String    @db.VarChar(255)
+  slug         String    @unique @db.VarChar(255)
+  excerpt      String
+  category     String    @db.VarChar(50)
+  published_at DateTime? @map("published_at")
+
+  @@index([category])
+  @@index([published_at])
+  @@map("blog_posts")
+}
