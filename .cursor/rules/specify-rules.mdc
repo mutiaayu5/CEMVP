@@ -1,8 +1,10 @@
-﻿# CEMVP Development Guidelines
+# CEMVP Development Guidelines
 
 Auto-generated from all feature plans. Last updated: 2026-01-06
 
 ## Active Technologies
+- TypeScript 5.9.3, React 19.2.3 + Next.js 16.1.1 (App Router), Tailwind CSS 3.4.19 (003-modernize-hero-design)
+- N/A (frontend-only changes) (003-modernize-hero-design)
 
 - TypeScript 5.x (Next.js 16.1.1) + Next.js 16.1.1, Prisma 5.17.0, Supabase PostgreSQL, Tailwind CSS v4.x, Zod (001-landing-page)
 
@@ -23,6 +25,8 @@ npm test; npm run lint
 TypeScript 5.x (Next.js 16.1.1): Follow standard conventions
 
 ## Recent Changes
+- 003-modernize-hero-design: Added TypeScript 5.9.3, React 19.2.3 + Next.js 16.1.1 (App Router), Tailwind CSS 3.4.19
+- 003-modernize-hero-design: Added TypeScript 5.9.3, React 19.2.3 + Next.js 16.1.1 (App Router), Tailwind CSS 3.4.19
 
 - 001-landing-page: Added TypeScript 5.x (Next.js 16.1.1) + Next.js 16.1.1, Prisma 5.17.0, Supabase PostgreSQL, Tailwind CSS v4.x, Zod
 
