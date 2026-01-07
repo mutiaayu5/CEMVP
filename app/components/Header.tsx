@@ -8,9 +8,19 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const scrollToSection = (section: string) => {
-    const element = document.getElementById(section)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+    // Scroll to blog section
+    const blogSection = document.getElementById('blog')
+    if (blogSection) {
+      blogSection.scrollIntoView({ behavior: 'smooth' })
+      
+      // Click the corresponding tab button
+      setTimeout(() => {
+        const tabButton = document.getElementById(section)
+        if (tabButton) {
+          tabButton.click()
+        }
+      }, 300)
+      
       setMobileMenuOpen(false)
     }
   }

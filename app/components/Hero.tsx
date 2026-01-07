@@ -2,7 +2,7 @@ import WaitlistForm from './WaitlistForm'
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[80vh] md:min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-amber-100 to-amber-50 dark:from-gray-900 dark:to-gray-800 px-4 py-20 transition-colors">
+    <section id="hero" className="relative min-h-[80vh] md:min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-amber-100 to-amber-50 dark:from-gray-900 dark:to-gray-800 px-4 py-20 transition-colors">
       <div className="max-w-4xl mx-auto text-center">
         {/* Badge */}
         <div className="mb-8 inline-block">

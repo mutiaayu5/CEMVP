@@ -6,10 +6,24 @@ import BlogCard from './BlogCard'
 
 type Category = 'Stories' | 'News'
 
+interface BlogPost {
+  id: string
+  title: string
+  slug: string
+  excerpt: string
+  featured_image: string
+  category: Category
+  author_name: string
+  author_avatar: string
+  read_time: number
+  published_at: string
+}
+
 export default function BlogSection() {
   const [activeTab, setActiveTab] = useState<Category>('Stories')
 
-  const filteredPosts = blogData.filter((post) => post.category === activeTab)
+  const posts = blogData as BlogPost[]
+  const filteredPosts = posts.filter((post) => post.category === activeTab)
 
   return (
     <section className="py-20 px-4 bg-amber-50 dark:bg-gray-900 transition-colors" id="blog">

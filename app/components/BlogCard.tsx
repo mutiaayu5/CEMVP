@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface BlogCardProps {
   post: {
@@ -16,7 +17,8 @@ interface BlogCardProps {
 
 export default function BlogCard({ post }: BlogCardProps) {
   return (
-    <article className="group cursor-pointer">
+    <Link href={`/blog/${post.slug}`}>
+      <article className="group cursor-pointer block">
       {/* Featured Image */}
       <div className="relative overflow-hidden rounded-lg mb-4 aspect-video bg-amber-100 dark:bg-gray-800">
         <Image
@@ -59,6 +61,7 @@ export default function BlogCard({ post }: BlogCardProps) {
         </div>
       </div>
     </article>
+    </Link>
   )
 }
 
