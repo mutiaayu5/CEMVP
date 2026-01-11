@@ -11,6 +11,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'ui-avatars.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'illustrations.popsy.co',
+        pathname: '/**',
+      },
     ],
   },
   async headers() {
@@ -20,7 +25,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "script-src 'self' 'unsafe-eval' 'unsafe-inline'; img-src 'self' https://images.unsplash.com https://ui-avatars.com data:; default-src 'self'",
+            value: "script-src 'self' 'unsafe-eval' 'unsafe-inline'; img-src 'self' https://images.unsplash.com https://ui-avatars.com https://illustrations.popsy.co data:; default-src 'self'",
           },
         ],
       },
